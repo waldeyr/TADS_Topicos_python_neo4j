@@ -1,0 +1,5 @@
+pessoa,hobbie,profissao
+"Ana","Dançar","Pintor"
+"Bia","Dançar","Programador"
+"Carlos","Tocar piano","Pintor"
+"Danilo","Andar a cavalo","Programador"
