@@ -1,3 +1,5 @@
+# sudo apt-get install python3-pip
+# sudo pip install pandas
 # sudo python3 -m pip install pip --upgrade
 # sudo python3 -m pip install py2neo
 from py2neo import *
@@ -28,6 +30,14 @@ class TopicosI:
 			tx.commit()
 
 
+	def getPessoaByProfissao(self, profissao):
+		result = self.GRAPH.run("MATCH (p:Pessoa)-[:QUER_SER]-(t:Profissao) WHERE t.nome='"+profissao+"' RETURN p.nome AS nome").data()
+		return result
+
 topicos  = TopicosI()
 topicos.cleanDatabase()
 topicos.loadDatabase()
+profissao = "Programador"
+result = topicos.getPessoaByProfissao(profissao)
+for pessoa in result:
+	print("O nome da pessoa que quer ser um "+profissao+" é "+pessoa['nome'])
