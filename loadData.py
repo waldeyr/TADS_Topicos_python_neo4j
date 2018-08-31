@@ -7,6 +7,9 @@ class TopicosI:
 
 	GRAPH = Graph(password="ifg")
 
+	def cleanDatabase(self):
+		self.GRAPH.run("MATCH (n) DETACH DELETE n;")
+
 	def loadDatabase(self):
 		df = pd.read_csv('data.txt', sep=',')
 		print(df)
@@ -15,9 +18,9 @@ class TopicosI:
 			p = Node("Pessoa", nome=linha['pessoa'])
 			h = Node("Hobbie", nome=linha['hobbie'])
 			t = Node("Profissao", nome=linha['profissao'])
-			tx.merge(p)
-			tx.merge(h)
-			tx.merge(t)
+			tx.create(p)
+			tx.merge(h, "Hobbie", "nome")
+			tx.merge(t, "Profissao", "nome")
 			p_h = Relationship(p, "GOSTA_DE", h)
 			p_t = Relationship(p, "QUER_SER", t)
 			tx.create(p_h)
@@ -25,6 +28,6 @@ class TopicosI:
 			tx.commit()
 
 
-topicos  = TopicosI();
-
+topicos  = TopicosI()
+topicos.cleanDatabase()
 topicos.loadDatabase()
