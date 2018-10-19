@@ -4,6 +4,7 @@
 # sudo python3 -m pip install py2neo
 import pandas as pd
 from py2neo import *
+import sys
 
 
 class BolsaFamilia:
@@ -15,17 +16,17 @@ class BolsaFamilia:
 	def loadDatabase(self):
 		for dataframe in pd.read_csv('BF201808.csv', sep=";", chunksize=10 ** 6):
 			for index, linha in dataframe.iterrows():
+				sys.stdout.write('.')
 				tx = self.GRAPH.begin()
-			p = Node("Pagamento", valor=linha['VALOR PARCELA'], mesReferencia=linha['MÊS REFERÊNCIA'],
+				p = Node("Pagamento", valor=linha['VALOR PARCELA'], mesReferencia=linha['MÊS REFERÊNCIA'],
 					 mesCompetencia=linha['MÊS COMPETÊNCIA'])
-			h = Node("Beneficiário", nome=linha['NOME FAVORECIDO'], nis=linha['NIS FAVORECIDO'], uf=linha['UF'],
+				h = Node("Beneficiário", nome=linha['NOME FAVORECIDO'], nis=linha['NIS FAVORECIDO'], uf=linha['UF'],
 					 codMunicipio=linha['CÓDIGO MUNICÍPIO SIAFI'], nomeMunicipio=linha['NOME MUNICÍPIO'])
-			tx.create(p)
-			tx.merge(h, "Beneficiário", "NIS FAVORECIDO")
-			p_h = Relationship(h, "RECEBE", p)
-			tx.create(p_h)
-			tx.commit()
-
+				tx.create(p)
+				tx.merge(h, "Beneficiário", "nis")
+				p_h = Relationship(h, "RECEBE", p)
+				tx.create(p_h)
+				tx.commit()
 
 bf = BolsaFamilia()
 bf.cleanDatabase()
