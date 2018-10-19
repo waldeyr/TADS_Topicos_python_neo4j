@@ -2,6 +2,7 @@
 # sudo python3 -m pip install pip --upgrade
 # sudo pip install pandas
 # sudo python3 -m pip install py2neo
+# wget https://www.dropbox.com/s/z53qgw23lw042ij/BF201808.csv
 import pandas as pd
 from py2neo import *
 import sys
